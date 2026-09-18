@@ -37,4 +37,6 @@ while not hasQuit:
     continue
   else:
     inventory = process_delivery(inventory, int(stock_value))
+    tax_amount = calculate_tax(int(stock_value))
+    print(f"Tax amount for this transaction: ${tax_amount:.2f}")
     continue
