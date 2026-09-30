@@ -1,0 +1,5 @@
+services:
+  app:
+    build: .
+    volumes:
+      - ./inventory.txt:/app/inventory.txt
