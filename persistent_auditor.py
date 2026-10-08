@@ -5,7 +5,7 @@ print("====================================")
 print("INVENTORY MANAGEMENT SYSTEM")
 print("====================================")
 
-INVENTORY_FILE = 'inventory.txt'
+INVENTORY_FILE = 'inventory.json'
 inventory_file_path = Path(INVENTORY_FILE)
 
 def process_delivery(new_item, inventory):
