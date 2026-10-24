@@ -8,6 +8,20 @@ print("====================================")
 INVENTORY_FILE = 'inventory.json'
 inventory_file_path = Path(INVENTORY_FILE)
 
+class Product:
+  def __init__(self, product_id, name, stock, price):
+    self.__product_id = product_id
+    self.__name = name
+    self.__price = price
+    self.__stock = stock
+
+  def update_stock(self, new_stock):
+    self.__stock = new_stock
+
+  def display_information(self):
+      print(f"ID: {self.__product_id}, Name: {self.__name}, Quantity: {self.__stock}, Price: ${self.__price}")
+
+
 def process_delivery(new_item, inventory):
   new_product_name = new_item["product_name"]
   product_exists = False
