@@ -21,6 +21,27 @@ class Product:
   def display_information(self):
       print(f"ID: {self.__product_id}, Name: {self.__name}, Quantity: {self.__stock}, Price: ${self.__price}")
 
+class Inventory:
+  def __init__(self):
+    self.__product_list = []
+
+  def add_product(self, new_product):
+    self.__product_list.append(new_product)
+
+  def search_product(self, product_id):
+    for product in self.__product_list:
+      if product.__product_id == product_id:
+        return product
+    return None
+
+  def display_all(self):
+    print("Current Inventory:\n-----------------------------")
+    if len(self.__product_list) < 1:
+      print("Inventory is Empty...")
+    else:
+      for product in self.__product_list:
+        product.display_information()
+      print("-----------------------------\n")
 
 def process_delivery(new_item, inventory):
   new_product_name = new_item["product_name"]
