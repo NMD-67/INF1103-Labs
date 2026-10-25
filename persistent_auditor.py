@@ -1,89 +1,14 @@
 import json
 from pathlib import Path
-
-print("====================================")
-print("INVENTORY MANAGEMENT SYSTEM")
-print("====================================")
+from product import Product
+from inventory import Inventory
 
 INVENTORY_FILE = 'inventory.json'
 inventory_file_path = Path(INVENTORY_FILE)
 
-class Product:
-  def __init__(self, product_id, name, stock, price):
-    self.__product_id = product_id
-    self.__name = name
-    self.__price = price
-    self.__stock = stock
-
-  @property
-  def product_id(self):
-    return self.__product_id
-
-  @property
-  def name(self):
-    return self.__name
-
-  @property
-  def price(self):
-    return self.__price
-
-  @property
-  def stock(self):
-    return self.__stock
-
-  def update_stock(self, new_stock):
-    self.__stock = new_stock
-
-  def display_information(self):
-      print(f"ID: {self.__product_id}, Name: {self.__name}, Quantity: {self.__stock}, Price: ${self.__price}")
-class Inventory:
-  def __init__(self):
-    self.__product_list = []
-
-  def add_product(self, new_product):
-    self.__product_list.append(new_product)
-
-  def search_product(self, product_id):
-    for product in self.__product_list:
-      if product.product_id == int(product_id):
-        return product
-    return None
-
-  def search_product_by_name(self, product_name):
-    for product in self.__product_list:
-      if product.name == product_name:
-        return product
-    return None
-
-  def display_all(self):
-    print("Current Inventory:\n-----------------------------")
-    if len(self.__product_list) < 1:
-      print("Inventory is Empty...")
-    else:
-      for product in self.__product_list:
-        product.display_information()
-      print("-----------------------------\n")
-
-  def get_next_product_id(self):
-    if len(self.__product_list) == 0:
-      return 1000
-    return self.__product_list[-1].product_id + 1
-
-  def get_inventory_size(self):
-    return len(self.__product_list)
-
-  def save_inventory(self):
-    print(f"Saving inventory to {INVENTORY_FILE}...")
-    saving_list = []
-    for product in self.__product_list:
-      saving_list.append({
-        "product_id": product.product_id,
-        "product_name": product.name,
-        "qty": product.stock,
-        "price": product.price
-      })
-    with open(INVENTORY_FILE, "w") as f:
-      f.write(json.dumps(saving_list))
+print("====================================")
+print("INVENTORY MANAGEMENT SYSTEM")
+print("====================================")
 
 def load_inventory():
   product_list = []
@@ -117,7 +42,7 @@ def calculate_tax(amt):
   return amt * tax
 
 def quit_handler():
-  inventory.save_inventory()
+  inventory.save_inventory(INVENTORY_FILE)
   print("Thank you for using the Inventory Management System. Goodbye!")
 
 def display_current_inventory_handler():
@@ -166,6 +91,9 @@ def search_product_by_name_handler():
   product_name = input("\nEnter Product Name to Search: ")
   search_product_by_name(product_name)
 
+def save_inventory_handler():
+  inventory.save_inventory(INVENTORY_FILE)
+
 # inventory = load_inventory()
 inventory = Inventory()
 for product in load_inventory():
@@ -177,7 +105,7 @@ options = [
   {"name": "Add New Product", "function": add_new_product_handler},
   {"name": "Update Product Quantity", "function": update_product_quantity_handler},
   {"name": "Search Product by Name", "function": search_product_by_name_handler},
-  {"name": "Save Inventory", "function": inventory.save_inventory},
+  {"name": "Save Inventory", "function": save_inventory_handler},
   {"name": "Quit", "function": quit_handler}
 ]
 while not hasQuit:
