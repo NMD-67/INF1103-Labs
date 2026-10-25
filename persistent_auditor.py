@@ -15,12 +15,27 @@ class Product:
     self.__price = price
     self.__stock = stock
 
+  @property
+  def product_id(self):
+    return self.__product_id
+
+  @property
+  def name(self):
+    return self.__name
+
+  @property
+  def price(self):
+    return self.__price
+
+  @property
+  def stock(self):
+    return self.__stock
+
   def update_stock(self, new_stock):
     self.__stock = new_stock
 
   def display_information(self):
       print(f"ID: {self.__product_id}, Name: {self.__name}, Quantity: {self.__stock}, Price: ${self.__price}")
-
 class Inventory:
   def __init__(self):
     self.__product_list = []
@@ -30,7 +45,13 @@ class Inventory:
 
   def search_product(self, product_id):
     for product in self.__product_list:
-      if product.__product_id == product_id:
+      if product.product_id == int(product_id):
+        return product
+    return None
+
+  def search_product_by_name(self, product_name):
+    for product in self.__product_list:
+      if product.name == product_name:
         return product
     return None
 
@@ -43,71 +64,64 @@ class Inventory:
         product.display_information()
       print("-----------------------------\n")
 
-def process_delivery(new_item, inventory):
-  new_product_name = new_item["product_name"]
-  product_exists = False
-  for product in inventory:
-    if product["product_name"] == new_product_name:
-      product_exists = True
-      old_qty = int(product["qty"])
-      product["qty"] = old_qty + int(new_item["qty"])
+  def get_next_product_id(self):
+    if len(self.__product_list) == 0:
+      return 1000
+    return self.__product_list[-1].product_id + 1
 
-  if not product_exists:
-    inventory.append(new_item)
+  def get_inventory_size(self):
+    return len(self.__product_list)
 
-  return product_exists
+  def save_inventory(self):
+    print(f"Saving inventory to {INVENTORY_FILE}...")
+    saving_list = []
+    for product in self.__product_list:
+      saving_list.append({
+        "product_id": product.product_id,
+        "product_name": product.name,
+        "qty": product.stock,
+        "price": product.price
+      })
+    with open(INVENTORY_FILE, "w") as f:
+      f.write(json.dumps(saving_list))
 
 def load_inventory():
-  value = []
+  product_list = []
+  file_value = []
   if inventory_file_path.exists():
     print(f"{INVENTORY_FILE} found, loading inventory...")
     with open(INVENTORY_FILE) as f:
-      value = json.loads(f.read())
-      print(f"Inventory loaded, {len(value)} items found.\n")
+      content = f.read()
+      if content != "":
+        file_value = json.loads(content)
+        print(f"Inventory loaded, {len(file_value)} items found.\n")
 
-  return value
+  for product in file_value:
+    id = product["product_id"]
+    name = product["product_name"]
+    qty = product["qty"]
+    price = product["price"]
+    product_list.append(Product(id, name, qty, price))
 
-def init_id(inventory):
-  next_product_id = 1000
-  if len(inventory) > 0:
-    next_product_id = inventory[-1]["id"] + 1
+  return product_list
 
-  return next_product_id
+# def init_id(inventory):
+#   next_product_id = 1000
+#   if len(inventory) > 0:
+#     next_product_id = inventory[-1] + 1
+
+  # return next_product_id
 
 def calculate_tax(amt):
   tax = 0.1
   return amt * tax
 
 def quit_handler():
-  save_inventory()
+  inventory.save_inventory()
   print("Thank you for using the Inventory Management System. Goodbye!")
 
-
-def get_inventory_size(inventory):
-  inventory_count = 0
-  for product in inventory:
-    inventory_count += int(product["qty"])
-  return inventory_count
-
-def save_inventory():
-  print(f"Saving inventory to {INVENTORY_FILE}...")
-  with open(INVENTORY_FILE, "w") as f:
-    f.write(json.dumps(inventory))
-
-def print_product_details(product):
-  print(f"ID: {product['id']}, Name: {product['product_name']}, Quantity: {product['qty']}, Price: ${product['price']}")
-
-def display_current_inventory(inventory):
-  print("Current Inventory:\n-----------------------------")
-  if len(inventory) < 1:
-    print("Inventory is Empty...")
-  else:
-    for product in inventory:
-      print_product_details(product)
-    print("-----------------------------\n")
-
 def display_current_inventory_handler():
-  display_current_inventory(inventory)
+  inventory.display_all()
 
 def add_new_product_handler():
   new_product = {}
@@ -120,46 +134,42 @@ def add_new_product_handler():
   if not price_value.isdigit():
     print("Error: Price must be a number!")
     return
-  new_product["id"] = init_id(inventory=inventory)
-  new_product["product_name"] = product_name
-  new_product["qty"] = stock_value
-  new_product["price"] = price_value
-  inventory.append(new_product)
+  id = inventory.get_next_product_id()
+  new_product = Product(id, product_name, stock_value, price_value)
+  inventory.add_product(new_product)
   print("\nNew Order Added:")
-  print_product_details(new_product)
+  new_product.display_information()
 
 def update_product_quantity_handler():
   product_id = input("\nEnter Product ID to Update: ")
   if not product_id.isdigit():
     print("Error: Product ID must be a number!")
     return
-  for product in inventory:
-    if product["id"] == int(product_id):
-      new_qty = input(f"Enter New Quantity for {product['product_name']}: ")
-      if not new_qty.isdigit():
-        print("Error: Quantity must be a number!")
-        return
-      product["qty"] = new_qty
-      print(f"Updated {product['product_name']} to quantity {new_qty}.")
+  product = inventory.search_product(product_id)
+  if product is not None:
+    new_qty = input(f"Enter New Quantity for {product.name}: ")
+    if not new_qty.isdigit():
+      print("Error: Quantity must be a number!")
       return
+    product.update_stock(new_qty)
+    print(f"Updated {product.name} to quantity {new_qty}.")
+    return
   print(f"Product with ID {product_id} not found.")
 
-def search_product_by_name(inventory, product_name):
-  for product in inventory:
-    if product["product_name"] == product_name:
-      print(f"Product Found\n------------------------------")
-      print(f"ID: {product['id']}")
-      print(f"Name: {product['product_name']}")
-      print(f"Quantity: {product['qty']}")
-      print(f"Price: {product['price']}")
-      return
-  print(f"Product '{product_name}' not found in inventory.")
+def search_product_by_name(product_name):
+  search_result = inventory.search_product_by_name(product_name)
+  if search_result is None:
+    return print(f"Product '{product_name}' not found in inventory.")
+  search_result.display_information()
 
 def search_product_by_name_handler():
   product_name = input("\nEnter Product Name to Search: ")
-  search_product_by_name(inventory, product_name)
+  search_product_by_name(product_name)
 
-inventory = load_inventory()
+# inventory = load_inventory()
+inventory = Inventory()
+for product in load_inventory():
+  inventory.add_product(product)
 failed_entries = 0
 hasQuit = False
 options = [
@@ -167,7 +177,7 @@ options = [
   {"name": "Add New Product", "function": add_new_product_handler},
   {"name": "Update Product Quantity", "function": update_product_quantity_handler},
   {"name": "Search Product by Name", "function": search_product_by_name_handler},
-  {"name": "Save Inventory", "function": save_inventory},
+  {"name": "Save Inventory", "function": inventory.save_inventory},
   {"name": "Quit", "function": quit_handler}
 ]
 while not hasQuit:
@@ -187,40 +197,3 @@ while not hasQuit:
 
   if selected_option["name"] == "Quit":
     hasQuit = True
-
-  # new_product = {}
-  # product_name, stock_value = get_valid_input()
-
-  # if (stock_value or product_name) == "quit".lower():
-  #   hasQuit = True
-  #   generate_report(get_inventory_size(inventory), failed_entries)
-  #   save_inventory()
-  #   print(f"Order Saved to {INVENTORY_FILE}")
-  #   continue
-  # elif not stock_value.isdigit():
-  #   failed_entries += 1
-  #   print("Error: Please input a number!")
-  #   continue
-  # elif int(stock_value) < 0:
-  #   failed_entries += 1
-  #   print("Error: Negative numbers are invalid!")
-  #   continue
-  # elif len(product_name) < 1:
-  #   failed_entries += 1
-  #   print("Error: Product Name is Invalid!")
-  #   continue
-  # else:
-  #   product_id = init_id(inventory=inventory)
-  #   new_product["id"] = product_id
-  #   new_product["product_name"] = product_name
-  #   new_product["qty"] = stock_value
-  #   is_old_product = process_delivery(new_item=new_product, inventory=inventory)
-  #   if is_old_product:
-  #     print(f"\nQuantity add for {new_product['product_name']}:")
-  #   else:
-  #     print("\nNew Order Added:")
-  #   print(f"{new_product['id']}, {new_product['product_name']}, {new_product['qty']}")
-    
-  #   # tax_amount = calculate_tax(int(stock_value))
-  #   # print(f"Tax amount for this transaction: ${tax_amount:.2f}")
-  #   continue
