@@ -40,11 +40,6 @@ class Inventory:
     print(f"Saving inventory to {INVENTORY_FILE}...")
     saving_list = []
     for product in self.__product_list:
-      saving_list.append({
-        "product_id": product.product_id,
-        "product_name": product.name,
-        "qty": product.stock,
-        "price": product.price
-      })
+      saving_list.append(product.get_json())
     with open(INVENTORY_FILE, "w") as f:
       f.write(json.dumps(saving_list))

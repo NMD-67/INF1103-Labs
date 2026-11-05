@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 from product import Product
 from inventory import Inventory
+from physical_product import PhyscialProduct
+from digital_product import DigitalProduct
 
 INVENTORY_FILE = 'inventory.json'
 inventory_file_path = Path(INVENTORY_FILE)
@@ -26,20 +28,11 @@ def load_inventory():
     name = product["product_name"]
     qty = product["qty"]
     price = product["price"]
-    product_list.append(Product(id, name, qty, price))
+    product_type = product["type"]
+    new_product = PhyscialProduct(id, name, qty, price, product["weight"]) if product_type == "physical" else DigitalProduct(id, name, qty, price, product["download_size"])
+    product_list.append(new_product)
 
   return product_list
-
-# def init_id(inventory):
-#   next_product_id = 1000
-#   if len(inventory) > 0:
-#     next_product_id = inventory[-1] + 1
-
-  # return next_product_id
-
-def calculate_tax(amt):
-  tax = 0.1
-  return amt * tax
 
 def quit_handler():
   inventory.save_inventory(INVENTORY_FILE)
@@ -53,14 +46,20 @@ def add_new_product_handler():
   product_name = input("\nEnter Product Name: ")
   stock_value = input("Enter Stock Quantity: ")
   price_value = input("Enter Price: ")
+  product_type = input("Enter Product Type (Physical [p]/ Digital [d]): ")
   if not stock_value.isdigit():
     print("Error: Quantity must be a number!")
     return
   if not price_value.isdigit():
     print("Error: Price must be a number!")
     return
+  if not product_type == "p" and not product_type == "d":
+    print("Error: Product Type must be either p or d")
+    return
+  prompt = "weight" if product_type == "p" else "download size"
+  attr = input(f"Enter the product's {prompt}: ")
   id = inventory.get_next_product_id()
-  new_product = Product(id, product_name, stock_value, price_value)
+  new_product = PhyscialProduct(id, product_name, stock_value, price_value, attr) if product_type == "p" else DigitalProduct(id, product_name, stock_value, price_value, attr)
   inventory.add_product(new_product)
   print("\nNew Order Added:")
   new_product.display_information()

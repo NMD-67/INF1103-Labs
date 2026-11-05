@@ -1,5 +1,7 @@
 services:
   app:
+    stdin_open: true
+    tty: true
     build: .
     volumes:
       - ./inventory.txt:/app/inventory.txt
