@@ -1,0 +1,18 @@
+1. Before you run this test, write down what you expect to happen if you delete your supplier variable (del supplier) after creating the products. Can each Product still display its supplier information? Run it and check. If your prediction did not match, note why.
+The program can still run normally as the supplier in the product is a seprate instance. The predictions match
+
+2. Before step 3, write down whether you expect the Product to still work after it is removed from Inventory A, and why. Then check.
+Yes, because the product instance is not tied to the Invertory class.
+
+3.If you add the same Product to two different Orders, how many OrderLine objects and how many Product objects will exist? Write your answer down, then check it (for example, compare objects using is or id()).
+2 OrderLine objects, and 3 Products (Original, order_a, order_b). There is only 1 product as it is the same between the 3.
+
+4. Diagnose: A teammate proposes this DigitalProduct method. The program runs until Inventory calls update_stock() on a digital product.
+class DigitalProduct(Product):
+  def update_stock(self, quantity: int) -> None: 
+    raise NotImplementedError("Digital products have no stock")
+Does this violate LSP? What would you change: the subclass, the parent class (Product), or the inheritance relationship? Write 2–3 sentences explaining your choice.
+Yes, as the parent implements update_stock but the child class does not and returns an error when the method is called. I'd remove stock from the parent Product class and put it instead in the PhysicalProduct class as well as the update_stock() method.
+
+5. Before running your test, write down what each product will print for get_fulfilment_info(). Then compare with the actual output.
+It will print the product type and delivery method based on the product type
