@@ -24,5 +24,4 @@ class PhyscialProduct(Product, CanBeShipped):
     def get_json(self):
         json = super().get_json()
         json.update({"weight": self.__weight})
-        print(f"json: {json}")
         return json

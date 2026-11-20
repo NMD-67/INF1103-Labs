@@ -1,0 +1,83 @@
+commit 356e1d531df4a7a6e6880bf9b24c37b8c569a0f3
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Tue Nov 10 16:58:53 2026 +0800
+
+    tutorial_8
+
+commit 17bf96eb0ce1ee9e0082c27e2e61028059d30e19
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Fri Nov 6 02:02:52 2026 +0800
+
+    lab7
+
+commit 33cb2b68e27d357372155f7a97cfbb9a18439190
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Sun Oct 25 11:55:49 2026 +0800
+
+    updated classes to be in seperate files
+
+commit e253ab94f44fb817ade8bdfe74b3f9457aa004e5
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Sun Oct 25 11:07:53 2026 +0800
+
+    refactored auditor
+
+commit 69f630fa31fd1176bab9db39b5b3c6d1d1e2be35
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Sun Oct 25 01:13:05 2026 +0800
+
+    added Inventory class
+
+commit 682242beae67dbaead0f17187b042ccc281bce55
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Sun Oct 25 01:03:49 2026 +0800
+
+    added product class
+
+commit 2b26ac3d3c1940e03f5b4c628b7b853142af18ea
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Thu Oct 8 17:18:36 2026 +0800
+
+    added inentory.json
+
+commit de87574a461a471dc343dd6e9ee681ed74821ab8
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Thu Oct 8 17:16:03 2026 +0800
+
+    tutorial 4
+
+commit 39e615646aa734d692a32ba4859eebb5e6a9bd1d
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Thu Oct 1 00:25:23 2026 +0800
+
+    Added persistent storage
+
+commit 9d2d0da36a903bfaf5021611085dc79191a685ef
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Fri Sep 18 17:15:05 2026 +0800
+
+    print the tax for input
+
+commit 752f29da2b19e2d75a62d3518a6143af5831bf7f
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Fri Sep 18 16:51:17 2026 +0800
+
+    added modular_auditor
+
+commit 27ee29cbd4b62c5e43d230835dfe9de21212a845
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Fri Sep 11 16:19:18 2026 +0800
+
+    Added dockerfile and fixed auditor.py
+
+commit 16260b0b76e315fa9d0fb10e40abed614366e75a
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Fri Sep 11 16:01:40 2026 +0800
+
+    Added auditor.py
+
+commit f7bf579b195612e51b464dd48c711a301541f3e3
+Author: NMD-67 <2603197@sit.singaporetech.edu.sg>
+Date:   Fri Sep 11 15:15:21 2026 +0800
+
+    Initial commit

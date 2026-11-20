@@ -24,5 +24,4 @@ class DigitalProduct(Product):
     def get_json(self):
         json = super().get_json()
         json.update({"download_size": self.__download_size})
-        print(f"Json: {json}")
         return json

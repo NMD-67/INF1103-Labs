@@ -4,13 +4,15 @@ from physical_product import PhyscialProduct
 from digital_product import DigitalProduct
 from inventory import Inventory
 from order import Order
+from bulk_discount import BulkDiscount
+from percentage_discount import PercentageDiscount
 
 test_supplier = Supplier("test_supplier_id", "test_supplier_name", "test@supplier.com")
 test_physical_product = PhyscialProduct(
     100, "test_product_name", 67, 67.67, 69, test_supplier
 )
 test_digital_product = DigitalProduct(
-    101, "test_digital_name", 23, 45, 67, test_supplier
+    101, "test_digital_name", 23, 10, 67, test_supplier
 )
 test_inventory = Inventory()
 test_inventory_B = Inventory()
@@ -21,6 +23,14 @@ test_order_B = Order("test_order_B_id")
 def show_product_details(product: Product) -> None:
     product.display_information()
     product.get_fulfilment_info()
+
+
+def test_6():
+    test_order.add_order_line(test_digital_product, 25)
+    test_order.set_discount(BulkDiscount(200, 20))
+    print(f"Total with bulk discount: {test_order.calculate_total()}")
+    test_order.set_discount(PercentageDiscount(10))
+    print(f"Total with percentage discount: {test_order.calculate_total()}")
 
 
 def test_5():
@@ -62,4 +72,4 @@ def test_1():
     test_digital_product.supplier.display_information()
 
 
-test_5()
+test_6()
