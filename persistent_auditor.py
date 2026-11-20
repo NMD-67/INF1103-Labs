@@ -5,6 +5,8 @@ from inventory import Inventory
 from physical_product import PhyscialProduct
 from digital_product import DigitalProduct
 from supplier import Supplier
+from ProductFactory import ProductFactory
+import csv
 
 INVENTORY_FILE = "inventory.json"
 inventory_file_path = Path(INVENTORY_FILE)
@@ -12,6 +14,54 @@ inventory_file_path = Path(INVENTORY_FILE)
 print("====================================")
 print("INVENTORY MANAGEMENT SYSTEM")
 print("====================================")
+
+
+supplier = Supplier("67", "Base Supplier", "base@supplier")
+product_factory = ProductFactory()
+
+
+def get_postive_float(prompt: str) -> float:
+    while True:
+        try:
+            value = float(input(prompt))
+            if value <= 0:
+                print("Please enter a number greater than zero")
+                continue
+            return value
+        except ValueError:
+            print("Please enter a valid number")
+
+
+def load_products(path: str, inventory: Inventory, supplier: Supplier) -> None:
+    try:
+        file = open(path, newline="")
+    except FileNotFoundError:
+        print(f"Products file not found: {path}")
+    else:
+        with file:
+            loaded = 0
+            reader = csv.reader(file)
+            next(reader, None)  # skip the header row
+
+            for row in reader:
+                try:
+                    product_type, product_id, name, price, stock = row
+                    product = ProductFactory.create(
+                        product_type,
+                        product_id,
+                        name,
+                        float(price),
+                        int(stock),
+                        supplier,
+                    )
+                    inventory.add_product(product)
+                    loaded += 1
+                except ValueError as e:
+                    print(f"Skipping invalid row {row}: {e}")
+
+        print(f"{loaded} products loaded.")
+    finally:
+        print("Load attempt finished.")
 
 
 def load_inventory():
@@ -31,7 +81,6 @@ def load_inventory():
         qty = product["qty"]
         price = product["price"]
         product_type = product["type"]
-        supplier = Supplier("67", "Base Supplier", "base@supplier")
         new_product = (
             PhyscialProduct(id, name, qty, price, product["weight"], supplier)
             if product_type == "physical"
@@ -57,13 +106,10 @@ def add_new_product_handler():
     new_product = {}
     product_name = input("\nEnter Product Name: ")
     stock_value = input("Enter Stock Quantity: ")
-    price_value = input("Enter Price: ")
+    price_value = get_postive_float("Enter Price: ")
     product_type = input("Enter Product Type (Physical [p]/ Digital [d]): ")
     if not stock_value.isdigit():
         print("Error: Quantity must be a number!")
-        return
-    if not price_value.isdigit():
-        print("Error: Price must be a number!")
         return
     if not product_type == "p" and not product_type == "d":
         print("Error: Product Type must be either p or d")
@@ -72,9 +118,9 @@ def add_new_product_handler():
     attr = input(f"Enter the product's {prompt}: ")
     id = inventory.get_next_product_id()
     new_product = (
-        PhyscialProduct(id, product_name, stock_value, price_value, attr)
+        PhyscialProduct(id, product_name, stock_value, price_value, attr, supplier)
         if product_type == "p"
-        else DigitalProduct(id, product_name, stock_value, price_value, attr)
+        else DigitalProduct(id, product_name, stock_value, price_value, attr, supplier)
     )
     inventory.add_product(new_product)
     print("\nNew Order Added:")

@@ -6,10 +6,18 @@ from inventory import Inventory
 from order import Order
 from bulk_discount import BulkDiscount
 from percentage_discount import PercentageDiscount
+from ProductFactory import ProductFactory
 
+product_factory = ProductFactory()
 test_supplier = Supplier("test_supplier_id", "test_supplier_name", "test@supplier.com")
-test_physical_product = PhyscialProduct(
-    100, "test_product_name", 67, 67.67, 69, test_supplier
+test_physical_product = product_factory.create(
+    product_type="physical",
+    product_id=100,
+    name="test_phy_product",
+    price=10,
+    stock_qty=6767,
+    supplier=test_supplier,
+    additional_fields={"weight": 67},
 )
 test_digital_product = DigitalProduct(
     101, "test_digital_name", 23, 10, 67, test_supplier
@@ -26,7 +34,7 @@ def show_product_details(product: Product) -> None:
 
 
 def test_6():
-    test_order.add_order_line(test_digital_product, 25)
+    test_order.add_order_line(test_physical_product, 25)
     test_order.set_discount(BulkDiscount(200, 20))
     print(f"Total with bulk discount: {test_order.calculate_total()}")
     test_order.set_discount(PercentageDiscount(10))
